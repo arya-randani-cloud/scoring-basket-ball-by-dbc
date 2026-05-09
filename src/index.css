@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Roboto+Condensed:wght@400;700&display=swap');
+
+@theme {
+  --font-sans: "Oswald", ui-sans-serif, system-ui, sans-serif;
+  --font-condensed: "Roboto Condensed", sans-serif;
+  
+  --color-wakatobi-blue-light: #0ea5e9;
+  --color-wakatobi-blue-dark: #075985;
+  --color-dinis-gold: #ffd700;
+  
+  --color-bento-bg: #0f172a;
+  --color-bento-card: #1e293b;
+  --color-bento-border: #334155;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-transparent text-white;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.animate-shake {
+  animation: shake 0.2s ease-in-out 0s 2;
+}
+
+.maritime-gradient {
+  background: linear-gradient(90deg, rgba(0, 86, 179, 0.95) 0%, rgba(0, 123, 255, 0.9) 100%);
+}
+
+.bento-card {
+  @apply bg-bento-card border border-bento-border rounded-xl p-5 flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300;
+}
