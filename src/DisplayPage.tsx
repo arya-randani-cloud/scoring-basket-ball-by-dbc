@@ -2,6 +2,7 @@ import * as React from "react";
 import { useScoreboard, formatTimer } from "./store";
 import { cn } from "./lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import MotionOverlayBanner from "./components/MotionOverlayBanner";
 
 function FoulDots({ count, side }: { count: number; side: 'left' | 'right' }) {
   return (
@@ -61,11 +62,14 @@ export default function DisplayPage() {
   };
 
   return (
-    <div className={cn(
-      "h-screen w-screen bg-transparent overflow-hidden flex flex-col p-[4%] transition-all duration-700",
-      layout.position === 'top' ? "justify-start" : "justify-end",
-      alignmentClasses[layout.alignment]
-    )}>
+    <div 
+      className={cn(
+        "h-screen w-screen overflow-hidden flex flex-col p-[4%] transition-all duration-700 relative",
+        layout.position === 'top' ? "justify-start" : "justify-end",
+        alignmentClasses[layout.alignment]
+      )}
+      style={{ backgroundColor: layout.chromaKey ? "#00ff00" : "transparent" }}
+    >
       <motion.div 
         layout
         style={{ scale: layout.scale }}
@@ -79,12 +83,21 @@ export default function DisplayPage() {
           {/* Regional Logo Left (WKTB) */}
           <div className="w-24 bg-gradient-to-br from-white via-white to-blue-50 flex flex-col items-center justify-center p-2 z-10 shrink-0 relative border-r border-black/10 shadow-[5px_0_15px_-5px_rgba(30,64,175,0.2)]">
              <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900 shadow-[0_-2px_10px_rgba(30,64,175,0.4)]" />
-             {state.home.logo ? (
-                <img src={state.home.logo} alt="" className="w-14 h-14 object-contain mb-1 drop-shadow-sm" />
+             {state.branding?.hostLogo ? (
+               <img 
+                 src={state.branding.hostLogo} 
+                 alt={state.branding.hostName || "Host"} 
+                 className="w-14 h-14 object-contain mb-1 drop-shadow-sm" 
+                 referrerPolicy="no-referrer"
+               />
              ) : (
-                <div className="text-2xl font-black italic text-blue-800 mb-1">WKTB</div>
+                <div className="text-2xl font-black italic text-blue-800 mb-1">
+                  {state.branding?.hostName?.substring(0, 4) || "WKTB"}
+                </div>
              )}
-             <div className="text-[7.5px] uppercase tracking-[0.1em] font-black text-blue-800/80 leading-none">Kab. Wakatobi</div>
+             <div className="text-[7.5px] uppercase tracking-[0.1em] font-black text-blue-800/80 leading-none">
+               {state.branding?.hostName || "Kab. Wakatobi"}
+             </div>
           </div>
 
           {/* Center Scoring Block */}
@@ -161,12 +174,21 @@ export default function DisplayPage() {
           {/* Owner Logo Right (DBC) */}
           <div className="w-24 bg-gradient-to-bl from-white via-white to-amber-50 flex flex-col items-center justify-center p-2 z-10 shrink-0 relative border-l border-black/10 shadow-[-5px_0_15px_-5px_rgba(245,158,11,0.2)]">
              <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600 shadow-[0_-2px_10px_rgba(245,158,11,0.4)]" />
-             {state.away.logo ? (
-                <img src={state.away.logo} alt="" className="w-14 h-14 object-contain mb-1 drop-shadow-sm" />
+             {state.branding?.ownerLogo ? (
+                <img 
+                  src={state.branding.ownerLogo} 
+                  alt={state.branding.ownerName || "Owner"} 
+                  className="w-14 h-14 object-contain mb-1 drop-shadow-sm" 
+                  referrerPolicy="no-referrer"
+                />
              ) : (
-                <div className="text-3xl font-black text-slate-800 italic mb-1">DBC</div>
+                <div className="text-3xl font-black text-slate-800 italic mb-1">
+                  {state.branding?.ownerName?.substring(0, 3) || "DBC"}
+                </div>
              )}
-             <div className="text-[7.5px] uppercase tracking-[0.1em] font-black text-slate-800/80 leading-none">Dinis BC</div>
+             <div className="text-[7.5px] uppercase tracking-[0.1em] font-black text-slate-800/80 leading-none">
+               {state.branding?.ownerName || "Dinis BC"}
+             </div>
           </div>
         </motion.div>
 
@@ -201,6 +223,19 @@ export default function DisplayPage() {
           )}
         </AnimatePresence>
       </motion.div>
+
+      {/* Broadcast Lower Third Motion Overlays */}
+      <div className={cn(
+        "absolute inset-x-0 flex justify-center pointer-events-none z-50 transition-all duration-500",
+        layout.position === 'bottom' ? "top-[8%]" : "bottom-[8%]"
+      )}>
+        <MotionOverlayBanner
+          active={!!state.lowerThird?.active}
+          styleType={state.lowerThird?.style || "none"}
+          mainText={state.lowerThird?.mainText || ""}
+          subText={state.lowerThird?.subText || ""}
+        />
+      </div>
     </div>
   );
 }

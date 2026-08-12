@@ -13,6 +13,7 @@ export type OverlayLayout = {
   alignment: 'left' | 'center' | 'right';
   scale: number;
   showSponsors: boolean;
+  chromaKey?: boolean;
 };
 
 export type ScoreboardState = {
@@ -25,6 +26,18 @@ export type ScoreboardState = {
   shotClockActive: boolean;
   sponsors: Sponsor[];
   layout: OverlayLayout;
+  branding: {
+    hostLogo: string;
+    hostName: string;
+    ownerLogo: string;
+    ownerName: string;
+  };
+  lowerThird: {
+    active: boolean;
+    style: 'none' | 'modern' | 'minimalist';
+    mainText: string;
+    subText: string;
+  };
 };
 
 export const defaultState: ScoreboardState = {
@@ -41,6 +54,19 @@ export const defaultState: ScoreboardState = {
     alignment: 'center',
     scale: 1,
     showSponsors: true,
+    chromaKey: false,
+  },
+  branding: {
+    hostLogo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Logo_Kabupaten_Wakatobi.png/500px-Logo_Kabupaten_Wakatobi.png",
+    hostName: "KAB. WAKATOBI",
+    ownerLogo: "",
+    ownerName: "DINIS BC"
+  },
+  lowerThird: {
+    active: false,
+    style: 'modern',
+    mainText: "KUNJUNGI WEBSITE KAMI",
+    subText: "WWW.DINISBC.COM"
   }
 };
 
@@ -73,6 +99,8 @@ export function useScoreboard() {
           ...newState,
           home: { ...defaultState.home, ...newState.home },
           away: { ...defaultState.away, ...newState.away },
+          branding: { ...defaultState.branding, ...newState.branding },
+          lowerThird: { ...defaultState.lowerThird, ...newState.lowerThird },
           sponsors: newState.sponsors || defaultState.sponsors,
           layout: { ...defaultState.layout, ...newState.layout }
         };

@@ -11,6 +11,7 @@ async function startServer() {
     cors: {
       origin: "*",
     },
+    maxHttpBufferSize: 5e7, // 50MB to support larger image transfers
   });
 
   const PORT = 3000;
